@@ -1,0 +1,62 @@
+:root {
+  --rosa: #e8b9b3;
+  --beige: #cfcab9;
+  --verde: #96b3a3;
+  --azul: #57a8b5;
+  --petroleo: #2f6d71;
+}
+
+body {
+  background-color: #fdfafa;
+  color: #2f2f2f;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 30px;
+  text-align: center;
+}
+
+h1 {
+  color: var(--petroleo);
+  margin-bottom: 40px;
+}
+
+.ciclo {
+  margin-bottom: 40px;
+}
+
+.ciclo h2 {
+  background-color: var(--azul);
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.curso {
+  background-color: var(--rosa);
+  border: 2px solid var(--petroleo);
+  border-radius: 12px;
+  padding: 10px;
+  margin: 10px auto;
+  width: 300px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: bold;
+}
+
+.curso:hover {
+  background-color: var(--verde);
+  color: white;
+}
+
+.curso.aprobado {
+  background-color: var(--beige);
+  text-decoration: line-through;
+  color: var(--petroleo);
+}
+
+.curso.bloqueado {
+  background-color: #eee;
+  color: #aaa;
+  border: 2px dashed #bbb;
+  cursor: not-allowed;
+}
