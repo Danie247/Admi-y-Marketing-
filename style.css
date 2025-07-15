@@ -1,62 +1,78 @@
 :root {
-  --rosa: #e8b9b3;
-  --beige: #cfcab9;
-  --verde: #96b3a3;
-  --azul: #57a8b5;
-  --petroleo: #2f6d71;
+  --verde-musgo: #bfc8ba;
+  --rosa-suave: #f2c1c1;
+  --gris-fondo: #f9f9f9;
+  --gris-texto: #444;
+  --gris-claro: #ddd;
+  --bloqueado: #ccc;
 }
 
 body {
-  background-color: #fdfafa;
-  color: #2f2f2f;
+  background-color: var(--gris-fondo);
   font-family: 'Segoe UI', sans-serif;
-  padding: 30px;
+  margin: 20px;
   text-align: center;
+  color: var(--gris-texto);
 }
 
 h1 {
-  color: var(--petroleo);
   margin-bottom: 40px;
+  color: #333;
 }
 
-.ciclo {
-  margin-bottom: 40px;
+.tabla-malla {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 12px;
 }
 
-.ciclo h2 {
-  background-color: var(--azul);
-  color: white;
+.columna-ciclo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding: 10px;
+  background-color: #ececec;
   border-radius: 10px;
-  margin-bottom: 15px;
+}
+
+.columna-ciclo h2 {
+  background-color: #999;
+  color: white;
+  padding: 5px 0;
+  border-radius: 5px;
+  font-size: 16px;
+  margin: 0;
 }
 
 .curso {
-  background-color: var(--rosa);
-  border: 2px solid var(--petroleo);
-  border-radius: 12px;
   padding: 10px;
-  margin: 10px auto;
-  width: 300px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s;
-  font-weight: bold;
+  font-size: 13px;
+  font-weight: 500;
+  border: 2px solid transparent;
+  transition: 0.2s ease;
 }
 
 .curso:hover {
-  background-color: var(--verde);
-  color: white;
+  transform: scale(1.02);
 }
 
-.curso.aprobado {
-  background-color: var(--beige);
-  text-decoration: line-through;
-  color: var(--petroleo);
+.admi {
+  background-color: var(--verde-musgo);
 }
 
-.curso.bloqueado {
-  background-color: #eee;
-  color: #aaa;
-  border: 2px dashed #bbb;
+.marketing {
+  background-color: var(--rosa-suave);
+}
+
+.bloqueado {
+  background-color: var(--bloqueado) !important;
   cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.aprobado {
+  text-decoration: line-through;
+  opacity: 0.6;
 }
