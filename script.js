@@ -1,131 +1,80 @@
 const cursos = [
   // CICLO 1
-  {
-    codigo: "HU625",
-    nombre: "Comprensión y Producción de Lenguaje I",
-    ciclo: 1,
-    requisitos: []
-  },
-  {
-    codigo: "HU548",
-    nombre: "Ética y Ciudadanía",
-    ciclo: 1,
-    requisitos: []
-  },
-  {
-    codigo: "AD2511",
-    nombre: "Introducción a la Administración",
-    ciclo: 1,
-    requisitos: []
-  },
-  {
-    codigo: "AF103",
-    nombre: "Fundamentos de Finanzas",
-    ciclo: 1,
-    requisitos: []
-  },
-  {
-    codigo: "AM216",
-    nombre: "Marketing I",
-    ciclo: 1,
-    requisitos: []
-  },
+  { ciclo: 1, codigo: "HU625", nombre: "Comprensión y Producción de Lenguaje I", requisitos: [], tipo: "admi" },
+  { ciclo: 1, codigo: "HU548", nombre: "Ética y Ciudadanía", requisitos: [], tipo: "admi" },
+  { ciclo: 1, codigo: "AD2511", nombre: "Introducción a la Administración", requisitos: [], tipo: "admi" },
+  { ciclo: 1, codigo: "AF103", nombre: "Fundamentos de Finanzas", requisitos: [], tipo: "admi" },
+  { ciclo: 1, codigo: "AM216", nombre: "Marketing I", requisitos: [], tipo: "marketing" },
 
   // CICLO 2
-  {
-    codigo: "MA459",
-    nombre: "Cálculo",
-    ciclo: 2,
-    requisitos: []
-  },
-  {
-    codigo: "HU626",
-    nombre: "Comprensión y Producción de Lenguaje II",
-    ciclo: 2,
-    requisitos: ["HU625"]
-  },
-  {
-    codigo: "AF141",
-    nombre: "Matemática Financiera",
-    ciclo: 2,
-    requisitos: ["AF103"]
-  },
-  {
-    codigo: "AF133",
-    nombre: "Macroeconomía",
-    ciclo: 2,
-    requisitos: ["AD2511"]
-  },
-  {
-    codigo: "AM217",
-    nombre: "Marketing II",
-    ciclo: 2,
-    requisitos: ["AM216"]
-  }
+  { ciclo: 2, codigo: "MA459", nombre: "Cálculo", requisitos: [], tipo: "admi" },
+  { ciclo: 2, codigo: "HU626", nombre: "Comp. y Prod. Lenguaje II", requisitos: ["HU625"], tipo: "admi" },
+  { ciclo: 2, codigo: "AF141", nombre: "Matemática Financiera", requisitos: ["AF103"], tipo: "admi" },
+  { ciclo: 2, codigo: "AF133", nombre: "Macroeconomía", requisitos: ["AD2511"], tipo: "admi" },
+  { ciclo: 2, codigo: "AM217", nombre: "Marketing II", requisitos: ["AM216"], tipo: "marketing" },
+
+  // Puedes seguir agregando todos los ciclos igual...
 ];
 
-const mallaContainer = document.getElementById("malla-container");
 const aprobados = JSON.parse(localStorage.getItem("aprobados")) || [];
+const container = document.getElementById("malla-container");
 
-function guardarProgreso() {
+function guardar() {
   localStorage.setItem("aprobados", JSON.stringify(aprobados));
 }
 
 function crearCurso(curso) {
   const div = document.createElement("div");
-  div.classList.add("curso");
-  div.textContent = `${curso.codigo} - ${curso.nombre}`;
-  div.dataset.codigo = curso.codigo;
+  div.className = `curso ${curso.tipo}`;
 
-  const requisitosCumplidos = curso.requisitos.every(r => aprobados.includes(r));
-  if (!requisitosCumplidos && curso.requisitos.length > 0 && !aprobados.includes(curso.codigo)) {
+  const bloqueado = curso.requisitos.length > 0 && !curso.requisitos.every(r => aprobados.includes(r));
+
+  if (bloqueado && !aprobados.includes(curso.codigo)) {
     div.classList.add("bloqueado");
-  } else {
-    div.addEventListener("click", () => {
-      if (div.classList.contains("bloqueado")) return;
-      div.classList.toggle("aprobado");
-
-      const codigo = div.dataset.codigo;
-      if (div.classList.contains("aprobado")) {
-        if (!aprobados.includes(codigo)) aprobados.push(codigo);
-      } else {
-        const index = aprobados.indexOf(codigo);
-        if (index !== -1) aprobados.splice(index, 1);
-      }
-
-      guardarProgreso();
-      renderMalla();
-    });
   }
 
   if (aprobados.includes(curso.codigo)) {
     div.classList.add("aprobado");
   }
 
+  div.textContent = `${curso.codigo} - ${curso.nombre}`;
+
+  if (!bloqueado) {
+    div.addEventListener("click", () => {
+      div.classList.toggle("aprobado");
+
+      if (div.classList.contains("aprobado")) {
+        aprobados.push(curso.codigo);
+      } else {
+        const i = aprobados.indexOf(curso.codigo);
+        if (i > -1) aprobados.splice(i, 1);
+      }
+
+      guardar();
+      renderMalla();
+    });
+  }
+
   return div;
 }
 
 function renderMalla() {
-  mallaContainer.innerHTML = "";
-  const ciclosUnicos = [...new Set(cursos.map(c => c.ciclo))].sort((a, b) => a - b);
+  container.innerHTML = "";
 
-  ciclosUnicos.forEach(ciclo => {
-    const contenedor = document.createElement("div");
-    contenedor.classList.add("ciclo");
+  for (let ciclo = 1; ciclo <= 10; ciclo++) {
+    const columna = document.createElement("div");
+    columna.className = "columna-ciclo";
 
     const titulo = document.createElement("h2");
-    titulo.textContent = `Ciclo ${ciclo}`;
-    contenedor.appendChild(titulo);
+    titulo.textContent = ciclo < 10 ? `0${ciclo}` : ciclo;
+    columna.appendChild(titulo);
 
-    cursos
-      .filter(c => c.ciclo === ciclo)
-      .forEach(curso => {
-        const divCurso = crearCurso(curso);
-        contenedor.appendChild(divCurso);
-      });
+    cursos.filter(c => c.ciclo === ciclo).forEach(curso => {
+      columna.appendChild(crearCurso(curso));
+    });
 
-    mallaContainer.appendChild(contenedor);
-  });
+    container.appendChild(columna);
+  }
 }
 
 renderMalla();
